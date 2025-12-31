@@ -3,7 +3,7 @@ kind: Kustomization
 
 # 1. 继承谁？(引用 base)
 resources:
-  - ../../base/web
+  - ../../base
   # - ../../base/auth   (等你写好 auth 后取消注释)
   # - ../../base/backend
 
