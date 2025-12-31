@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: revieu-web
+spec:
+  # replicas: 先不写，留给 overlays 决定
+  selector:
+    matchLabels:
+      app: revieu-web
+  template:
+    metadata:
+      labels:
+        app: revieu-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/revieu-corp/revieu-web # 只写镜像名，不写 tag
+          ports:
+            - containerPort: 80

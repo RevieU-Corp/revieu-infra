@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 1. 继承谁？(引用 base)
+resources:
+  - ../../../base/frontend
+  # - ../../../base/auth   (等你写好 auth 后取消注释)
+  # - ../../../base/backend
+
+# 2. 统一修改命名空间 (省得每个 yaml 都要写一遍 namespace: default)
+namespace: revieu-prod
+
+# 3. 镜像修改 (CI/CD 最常改这里)
+# 它可以自动把 base 里的镜像名替换成指定的 tag
+images:
+  - name: ghcr.io/revieu-corp/revieu-web
+    newTag: sha-41e645b # 具体的版本号
+
+# 4. 补丁 (Patch) - 修改副本数等细节
+patches:
+  - target:
+      kind: Deployment
+      name: revieu-web
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
