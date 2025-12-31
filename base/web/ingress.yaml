@@ -3,13 +3,12 @@ kind: Ingress
 metadata:
   name: revieu-web-ingress
   annotations:
-    # 1. 声明这是 APISIX 的 Ingress
-    kubernetes.io/ingress.class: apisix
     # 2. 告诉 Cert-manager 用哪个 Issuer (前面步骤创建的)
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     # 3. (可选) 开启 HTTP 自动跳转 HTTPS
     k8s.apisix.apache.org/http-to-https: "true"
 spec:
+  ingressClassName: apisix
   tls:
     - hosts:
         - revieu.weijun.online # 你的域名
