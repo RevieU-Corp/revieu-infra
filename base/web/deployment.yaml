@@ -12,6 +12,8 @@ spec:
       labels:
         app: revieu-web
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret # 名字必须和你刚才创建的 Secret 名字一致
       containers:
         - name: web
           image: ghcr.io/revieu-corp/revieu-web # 只写镜像名，不写 tag
