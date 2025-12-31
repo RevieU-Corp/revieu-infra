@@ -2,19 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: revieu-web-ingress
+  namespace: revieu-prod
   annotations:
-    # 1. 必填：声明这是 APISIX 的 Ingress (旧版注解建议保留，也可只用 spec.ingressClassName)
+    # 只要这一个注解就够了，告诉 K8s 这个 Ingress 归 APISIX 管
     kubernetes.io/ingress.class: apisix
-    # 2. 告诉 Cert-manager 用哪个 Issuer (前面步骤创建的)
-    cert-manager.io/cluster-issuer: "letsencrypt-dns"
-    # 3. (可选) 开启 HTTP 自动跳转 HTTPS
-    k8s.apisix.apache.org/http-to-https: "true"
+    # 不需要 cert-manager 的注解了，因为我们上面单独定义了 Certificate
 spec:
-  ingressClassName: apisix
+  # ingressClassName: apisix # 新版 K8s 推荐留着这个，双重保险
   tls:
     - hosts:
-        - revieu.weijun.online # 你的域名
-      secretName: revieu-web-tls-secret # 证书会自动存到这里
+        - revieu.weijun.online
+      secretName: revieu-web-tls-secret # 【重点】引用上面 Certificate 生成的 Secret
   rules:
     - host: revieu.weijun.online
       http:
@@ -23,6 +21,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: revieu-web-service # 对应上面创建的 Service 名字
+                name: revieu-web-service # 你的 Service 名字
                 port:
-                  number: 80 # 对应 Service 的 port
+                  number: 80

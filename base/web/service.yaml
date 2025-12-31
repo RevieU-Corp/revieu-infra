@@ -2,9 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: revieu-web-service
+  namespace: revieu-prod
 spec:
-  ports:
-    - port: 80
-      targetPort: 80
+  type: ClusterIP # <--- 确认是这个
   selector:
     app: revieu-web
+  ports:
+    - port: 80
+      targetPort: 3000 # 你容器里的实际端口
