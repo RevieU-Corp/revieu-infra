@@ -6,10 +6,9 @@ metadata:
     # 1. 必填：声明这是 APISIX 的 Ingress (旧版注解建议保留，也可只用 spec.ingressClassName)
     kubernetes.io/ingress.class: apisix
     # 2. 告诉 Cert-manager 用哪个 Issuer (前面步骤创建的)
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-dns"
     # 3. (可选) 开启 HTTP 自动跳转 HTTPS
     k8s.apisix.apache.org/http-to-https: "true"
-    k8s.apisix.apache.org/priority: "-10"
 spec:
   ingressClassName: apisix
   tls:
