@@ -24,7 +24,50 @@ revieu-infra/
         └── kustomization.yaml # 包含生产环境的 Patch (邮箱、镜像 Tag)
 ```
 
-## 🚀 部署指南
+## �️ 安装环境与组件
+
+### 1. 安装 K3s (基础底座)
+在干净的 Linux 机器上执行标准安装：
+```bash
+# 标准安装
+curl -sfL https://get.k3s.io | sh -
+
+# 中国大陆镜像加速安装 (可选)
+# curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh -
+```
+
+配置 `kubectl` 权限：
+```bash
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $(id -u):$(id -g) ~/.kube/config
+echo "export KUBECONFIG=~/.kube/config" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 2. 安装 Helm (客户端)
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+### 3. 安装 cert-manager (SSL 自动化)
+```bash
+# 添加并更新仓库
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+# 安装 cert-manager (包含 CRD)
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.13.3 \
+  --set installCRDs=true
+```
+
+---
+
+## �🚀 部署指南 (Project Deployment)
 
 ### 1. 准备工作 (Secrets)
 在应用配置前，需手动在集群中创建以下 Secret（出于安全考虑未放入 Git）：
