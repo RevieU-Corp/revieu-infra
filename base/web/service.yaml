@@ -9,4 +9,4 @@ spec:
     app: revieu-web
   ports:
     - port: 80
-      targetPort: 3000 # 你容器里的实际端口
+      targetPort: 80 # 你容器里的实际端口

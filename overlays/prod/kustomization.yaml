@@ -4,8 +4,6 @@ kind: Kustomization
 # 1. 继承谁？(引用 base)
 resources:
   - ../../base
-  # - ../../base/auth   (等你写好 auth 后取消注释)
-  # - ../../base/backend
 
 # 2. 统一修改命名空间 (省得每个 yaml 都要写一遍 namespace: default)
 namespace: revieu-prod

@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: revieu-auth-middleware
+  namespace: revieu-prod
+spec:
+  forwardAuth:
+    # 鉴权后端地址
+    address: http://revieu-auth-service.revieu-prod.svc.cluster.local:8000/verify
+    # 将鉴权后端的这些请求头透传给业务逻辑 (例如 User-ID)
+    authResponseHeaders:
+      - X-User-ID
+    # 允许透传的 Header
+    trustForwardHeader: true

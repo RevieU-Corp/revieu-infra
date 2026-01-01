@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: revieu-auth
+spec:
+  # replicas: 同样留给 overlays
+  selector:
+    matchLabels:
+      app: revieu-auth
+  template:
+    metadata:
+      labels:
+        app: revieu-auth
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: auth
+          image: ghcr.io/revieu-corp/revieu-auth # 对应后端容器
+          ports:
+            - containerPort: 8000 # 假设后端监听 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: url

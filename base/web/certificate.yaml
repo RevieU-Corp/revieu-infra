@@ -2,13 +2,11 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: revieu-cert
-  namespace: ingress-apisix
+  namespace: revieu-prod
 spec:
   secretName: revieu-web-tls-secret
   issuerRef:
-    name: letsencrypt-dns
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    # - "revieu.weijun.online"  <--- 【删掉这行！】
-    - "*.weijun.online" # <--- 保留这行 (万能匹配)
-    # - "weijun.online"         # (可选) 如果你想连根域名也支持，可以加这行，但不能加子域名
+    - "revieu.weijun.online"

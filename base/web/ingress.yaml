@@ -4,11 +4,12 @@ metadata:
   name: revieu-web-ingress
   namespace: revieu-prod
   annotations:
-    # 只要这一个注解就够了，告诉 K8s 这个 Ingress 归 APISIX 管
-    kubernetes.io/ingress.class: apisix
-    # 不需要 cert-manager 的注解了，因为我们上面单独定义了 Certificate
+    # 告诉 K8s 这个 Ingress 归 Traefik 管
+    kubernetes.io/ingress.class: traefik
+    # 【重点】引用刚才定义的 Middleware，格式是：命名空间-名字@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: revieu-prod-revieu-auth-middleware@kubernetescrd
 spec:
-  # ingressClassName: apisix # 新版 K8s 推荐留着这个，双重保险
+  # ingressClassName: traefik # 新版 K8s 推荐留着这个，双重保险
   tls:
     - hosts:
         - revieu.weijun.online

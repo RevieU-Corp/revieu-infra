@@ -1,7 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml # 确保先创建命名空间
-  - web/ # 引用子目录
-  # - auth/ # 引用子目录
-  # - backend/ # 引用子目录
+  - namespace.yaml
+  - cluster-issuer.yaml
+  - web/
+  - auth/
+  - traefik-auth-middleware.yaml
