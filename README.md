@@ -78,6 +78,28 @@ kubectl logs -n kube-system -l app.kubernetes.io/name=traefik --tail=50
 2. 查看 Auth 日志：`kubectl logs -l app=revieu-auth -n revieu-prod`。
 3. **临时绕过**: 在 `base/web/ingress.yaml` 中注释掉 `middlewares` 注解，重新 `apply` 即可。
 
-## 📝 维护指南
-- **更新镜像**: 修改 `overlays/prod/kustomization.yaml` 中的 `newTag`。
-- **扩容**: 修改 `overlays/prod/kustomization.yaml` 中关于 `replicas` 的 Patch。
+## ⚠️ 避坑指南 (Lessons Learned)
+
+在本项目部署过程中，我们总结了以下高频错误及解决方法：
+
+### 1. SSL 签发失败: "forbidden domain example.com"
+*   **现象**: `kubectl describe clusterissuer` 显示 `ErrRegisterACMEAccount`。
+*   **原因**: Let's Encrypt 不允许使用 `example.com` 等测试域名作为联系邮箱。
+*   **对策**: 务必在 `overlays/prod/kustomization.yaml` 中通过 Patch 替换为真实的个人/企业邮箱。
+
+### 2. 访问 500 错误: ForwardAuth 依赖
+*   **现象**: 浏览器访问报错 500，Traefik 日志显示无法连接鉴权服务。
+*   **原因**: 开启了 `ForwardAuth` 中间件，但 `revieu-auth` 服务未就绪（如镜像无法拉取、数据库连接失败）。
+*   **对策**: 
+    1.  确认 Auth Pod 正常运行。
+    2.  调试期间可临时在 `ingress.yaml` 中注释掉 `middlewares` 逻辑以排除网关干扰。
+
+### 3. Namespace 粘滞性
+*   **注意**: 我们的 Ingress 和 Middleware 都在 `revieu-prod` 命名空间下。如果在 Ingress 注解中引用中间件，格式必须是 `NAMESPACE-NAME@kubernetescrd`，缺一不可。
+
+## 🛡️ 生产环境建议 (Best Practices)
+
+1.  **资源限制 (Resources)**: 建议在各 Deployment 中显式指定 `cpu/memory` 的 `requests` 和 `limits`，避免 K3s 节点因资源耗尽崩溃。
+2.  **健康检查 (Liveness/Readiness)**: 为应用添加 `probes`，确保 Traefik 只把流量转给真正“活”着的容器。
+3.  **HPA 扩容**: 针对 `web` 前端，建议配置 `HorizontalPodAutoscaler` 以应对突发流量。
+4.  **证书监控**: 建议配置 Prometheus 监控 `cert-manager` 状态，确保证书续期进度正常。
