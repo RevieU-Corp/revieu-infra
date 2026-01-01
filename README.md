@@ -1,0 +1,83 @@
+# RevieU Infrastructure (K3s + Traefik + SSL)
+
+本项目基于 **K3s** 构建，使用 **Kustomize** 进行资源管理，集成了 **Traefik** 作为 Ingress Controller，并通过 **cert-manager** 实现了基于 ACME (Let's Encrypt) 的自动化 SSL 证书签发。
+
+## 🏗️ 架构概览
+
+- **网关层**: K3s 内置 Traefik，负责 HTTPS 卸载和路由转发。
+- **证书管理**: `cert-manager` 配合 `ClusterIssuer` 使用 HTTP-01 挑战自动申请证书。
+- **鉴权层**: 采用 Traefik 的 `ForwardAuth` 中间件模式，流量在到达业务前先由 `auth-service` 验证。
+- **配置管理**: `base/` 存放通用模板，`overlays/prod/` 存放生产环境特有的镜像 Tag、副本数和邮箱配置。
+
+## 📂 目录结构
+
+```text
+revieu-infra/
+├── base/                   # 基础配置
+│   ├── auth/               # Auth 后端服务 (Deployment, Service)
+│   ├── web/                # Web 前端服务 (Deployment, Service, Ingress, Certificate)
+│   ├── namespace.yaml      # 命名空间定义
+│   ├── cluster-issuer.yaml # SSL 签发机构模板
+│   └── traefik-auth-middleware.yaml # 鉴权中间件定义
+└── overlays/               # 环境差异化配置
+    └── prod/               # 生产环境
+        └── kustomization.yaml # 包含生产环境的 Patch (邮箱、镜像 Tag)
+```
+
+## 🚀 部署指南
+
+### 1. 准备工作 (Secrets)
+在应用配置前，需手动在集群中创建以下 Secret（出于安全考虑未放入 Git）：
+
+```bash
+# 1. GitHub 私有镜像拉取密钥
+kubectl create secret docker-registry ghcr-secret \
+  --docker-server=ghcr.io \
+  --docker-username=<GITHUB_USER> \
+  --docker-password=<PAT_TOKEN> \
+  -n revieu-prod
+
+# 2. 数据库连接密钥
+kubectl create secret generic db-secret \
+  --from-literal=url="postgresql://user:pass@host:5432/db" \
+  -n revieu-prod
+```
+
+### 2. 执行部署
+```bash
+# 进入生产目录
+cd overlays/prod/
+
+# 应用所有配置
+kubectl apply -k .
+```
+
+## 🔐 SSL 证书说明
+本项目使用 **Let's Encrypt HTTP-01** 验证：
+- **配置文件**: `base/cluster-issuer.yaml`
+- **Prod 覆盖**: 在 `overlays/prod/kustomization.yaml` 中通过 Patch 覆盖 `email` 字段。
+- **注意**: 必须确保域名解析正确，且服务器 80/443 端口对公网开放。
+
+## 🛠️ 故障排查 (Cheat Sheet)
+
+### 1. 证书状态
+```bash
+kubectl get cert -n revieu-prod         # 查看证书是否 READY
+kubectl describe cert revieu-cert -n revieu-prod # 查看具体签发报错
+kubectl get challenge -n revieu-prod   # 查看 ACME 挑战进度
+```
+
+### 2. 网关日志
+```bash
+kubectl logs -n kube-system -l app.kubernetes.io/name=traefik --tail=50
+```
+
+### 3. 服务调试
+如果遇到 **500 Error**，通常是 `ForwardAuth` 无法连接到 `auth-service` 导致的：
+1. 检查 Auth Pod 状态：`kubectl get pods -n revieu-prod`。
+2. 查看 Auth 日志：`kubectl logs -l app=revieu-auth -n revieu-prod`。
+3. **临时绕过**: 在 `base/web/ingress.yaml` 中注释掉 `middlewares` 注解，重新 `apply` 即可。
+
+## 📝 维护指南
+- **更新镜像**: 修改 `overlays/prod/kustomization.yaml` 中的 `newTag`。
+- **扩容**: 修改 `overlays/prod/kustomization.yaml` 中关于 `replicas` 的 Patch。
