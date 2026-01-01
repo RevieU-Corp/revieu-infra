@@ -7,7 +7,8 @@ metadata:
     # 告诉 K8s 这个 Ingress 归 Traefik 管
     kubernetes.io/ingress.class: traefik
     # 【重点】引用刚才定义的 Middleware，格式是：命名空间-名字@kubernetescrd
-    traefik.ingress.kubernetes.io/router.middlewares: revieu-prod-revieu-auth-middleware@kubernetescrd
+    # 【调试】暂时注释掉鉴权网关，等 Auth 镜像上传后再开启
+    # traefik.ingress.kubernetes.io/router.middlewares: revieu-prod-revieu-auth-middleware@kubernetescrd
 spec:
   # ingressClassName: traefik # 新版 K8s 推荐留着这个，双重保险
   tls:
