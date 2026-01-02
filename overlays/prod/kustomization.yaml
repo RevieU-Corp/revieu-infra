@@ -12,7 +12,7 @@ namespace: revieu-prod
 # 它可以自动把 base 里的镜像名替换成指定的 tag
 images:
   - name: ghcr.io/revieu-corp/revieu-web
-    newTag: sha-ce1d52c # 具体的版本号
+    newTag: sha-60b88aa # 具体的版本号
 
 # 4. 补丁 (Patch) - 修改副本数等细节
 patches:
