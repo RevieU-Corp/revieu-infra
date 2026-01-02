@@ -1,0 +1,24 @@
+name: 💅 Style (格式)
+description: 格式修改，不影响逻辑 (Formatting, missing semi-colons, etc)
+title: "[style]: "
+labels: ["style"]
+body:
+  - type: textarea
+    id: details
+    attributes:
+      label: 格式调整说明
+      description: 请描述需要调整的代码格式。
+      placeholder: 统一使用 2 空格缩进，修复 Prettier 报错...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)

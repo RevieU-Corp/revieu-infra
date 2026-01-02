@@ -1,0 +1,66 @@
+name: 🐛 Bug Report (错误报告)
+description: 提交一个 Bug 帮助我们修复问题
+title: "[fix]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量详细填写以下信息，这对我们快速定位问题非常有帮助。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 请清晰简洁地描述发生了什么问题。
+      placeholder: 比如：点击登录按钮后页面白屏，没有任何反应...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 我们该如何重现这个错误？
+      placeholder: |
+        1. 进入首页
+        2. 点击 '...'
+        3. 滚动到底部
+        4. 看到了错误
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)
+
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 你的操作系统、浏览器版本或 App 版本。
+      placeholder: Chrome 120 / iOS 17 / Windows 11
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 截图或日志 (可选)
+      description: 如果有报错截图或 Console 日志，请粘贴在这里。
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已经搜索过现有的 Issue，确保没有重复提交
+          required: true

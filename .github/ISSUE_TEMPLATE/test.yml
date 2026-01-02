@@ -1,0 +1,24 @@
+name: 🧪 Test (测试)
+description: 增加或修改测试 (Adding missing tests or correcting existing tests)
+title: "[test]: "
+labels: ["testing"]
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: 测试覆盖范围
+      description: 哪些功能需要补充或修改测试？
+      placeholder: 为 Auth 模块添加单元测试...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)

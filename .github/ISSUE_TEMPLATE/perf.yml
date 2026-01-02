@@ -1,0 +1,32 @@
+name: ⚡ Performance (性能优化)
+description: 性能优化 (A code change that improves performance)
+title: "[perf]: "
+labels: ["performance"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 性能瓶颈
+      description: 请描述当前的性能问题。
+      placeholder: 首页加载时间过长，SQL 查询未命中索引...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 优化方案
+      description: 你有什么性能优化建议？
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)

@@ -1,0 +1,24 @@
+name: 📝 Documentation (文档)
+description: 仅修改文档 (Documentation only changes)
+title: "[docs]: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: target
+    attributes:
+      label: 修改内容
+      description: 请描述哪些文档需要更新或创建。
+      placeholder: 更新 README 中的安装指南...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)

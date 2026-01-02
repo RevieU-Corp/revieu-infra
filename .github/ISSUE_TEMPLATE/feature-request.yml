@@ -1,0 +1,49 @@
+name: ✨ Feature Request (新功能建议)
+description: 建议一个新功能或改进
+title: "[feat]: "
+labels: ["enhancement", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        你有好的想法？太棒了！请告诉我们你想解决什么问题。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到了什么痛点？
+      description: 这个功能是用来解决什么问题的？
+      placeholder: 我发现在使用导出功能时，总是需要重复手动修改文件名，非常浪费时间...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 你期望的解决方案
+      description: 你希望这个功能是什么样子的？
+      placeholder: 希望在导出弹窗里可以直接自定义文件名前缀...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: team
+    attributes:
+      label: 负责团队 (Team Selection)
+      description: 请选择负责处理或跟进此 Issues 的团队。
+      options:
+        - label: 🖥️ Backend (后端)
+        - label: 🎨 Frontend (前端)
+        - label: ⚙️ DevOps / Infra (运维/基础架构)
+        - label: 📝 Documentation (文档)
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 紧迫程度
+      options:
+        - ☁️ 低 - 只是一个不错的想法 (Nice to have)
+        - ⛅ 中 - 对我的工作流有帮助
+        - ⛈️ 高 - 我非常需要这个功能 (Critical)
+    validations:
+      required: false
