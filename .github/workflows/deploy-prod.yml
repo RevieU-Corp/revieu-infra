@@ -1,0 +1,60 @@
+name: Deploy Production
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - "overlays/prod/**"
+    workflow_dispatch: # Allow manual trigger
+
+jobs:
+    deploy:
+        name: Deploy to Production
+        runs-on: ubuntu-latest
+        steps:
+            - name: SSH and Deploy
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.DEPLOY_HOST }}
+                  username: ${{ secrets.DEPLOY_USER }}
+                  key: ${{ secrets.DEPLOY_KEY }}
+                  script: |
+                      # 1. Switch to target directory
+                      cd ${{ secrets.DEPLOY_DIR }}
+
+                      # 2. Update code
+                      echo "Pulling latest code..."
+                      git checkout main
+                      git pull origin main
+
+                      # 3. Apply Kubernetes configuration
+                      echo "Applying kustomization..."
+                      kubectl apply -k overlays/prod/
+
+                      # 4. Wait for deployment to complete
+                      echo "Waiting for deployments to stabilize..."
+                      kubectl rollout status deployment/revieu-web -n revieu-prod --timeout=300s
+                      kubectl rollout status deployment/revieu-auth -n revieu-prod --timeout=300s
+
+                      # 5. Collect deployment summary
+                      echo "Collecting deployment information..."
+                      WEB_PODS=$(kubectl get pods -n revieu-prod -l app=revieu-web -o wide --no-headers | head -n 5 | tr '\n' ' | ')
+                      AUTH_PODS=$(kubectl get pods -n revieu-prod -l app=revieu-auth -o wide --no-headers | head -n 5 | tr '\n' ' | ')
+                      DEPLOY_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+
+                      # 6. Send notification via Webhook
+                      echo "Sending webhook notification..."
+                      curl -X POST -H "Content-Type: application/json" \
+                        -d "{
+                          \"project\": \"revieu-infra\",
+                          \"environment\": \"production\",
+                          \"status\": \"success\",
+                          \"deploy_time\": \"$DEPLOY_TIME\",
+                          \"commit_sha\": \"${{ github.sha }}\",
+                          \"details\": {
+                            \"web_pods\": \"$WEB_PODS\",
+                            \"auth_pods\": \"$AUTH_PODS\"
+                          }
+                        }" \
+                        ${{ secrets.WEBHOOK_URL }}
