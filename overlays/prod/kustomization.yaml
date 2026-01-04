@@ -5,8 +5,10 @@ kind: Kustomization
 # Grouped by service/component for better organization
 resources:
   - ./common
-  - ./auth
-  - ./web
+  - ./apps/auth
+  - ./apps/web
+  - ./external/postgres
+  - ./middleware/traefik
 
 # Global Namespace
 namespace: revieu-prod
