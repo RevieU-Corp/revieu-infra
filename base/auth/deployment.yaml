@@ -18,10 +18,11 @@ spec:
         - name: auth
           image: ghcr.io/revieu-corp/revieu-auth # 对应后端容器
           ports:
-            - containerPort: 8000 # 假设后端监听 8000
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: url
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: revieu-auth-config
+            - configMapRef:
+                name: revieu-auth-env-config
+            - secretRef:
+                name: revieu-auth-secret

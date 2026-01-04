@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: revieu-auth-config
+data:
+  POSTGRES_HOST: "placeholder"
+  POSTGRES_PORT: "placeholder"
+  POSTGRES_DB: "placeholder"
+  LOG_DIR: "placeholder"
+  FLASK_ENV: "placeholder"
+  MAIL_SERVER: "placeholder"
+  MAIL_PORT: "placeholder"
+  MAIL_USE_TLS: "placeholder"
+  MAIL_USE_SSL: "placeholder"
+  MAIL_SENDER_NAME: "placeholder"
+  MAIL_SENDER_EMAIL: "placeholder"

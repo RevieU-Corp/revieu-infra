@@ -5,4 +5,5 @@ resources:
   - cluster-issuer.yaml
   - web/
   - auth/
+  - postgres-external/
   - traefik-auth-middleware.yaml

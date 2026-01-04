@@ -3,3 +3,13 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
+  - configmap.yaml
+  - secret.yaml
+
+configMapGenerator:
+  - name: revieu-auth-env-config
+    literals:
+      - GOOGLE_REDIRECT_URI="http://localhost:8080/api/v1/auth/google/callback"
+      - GITHUB_REDIRECT_URI="http://localhost:8080/api/v1/auth/github/callback"
+      - FRONTEND_URL="http://localhost:5173"
+      - DOMAIN="http://localhost:8082"
