@@ -3,7 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../../base/common
-  - ../../../base/postgres-external
+  - ../../../base/external/postgres
+  - ../../../base/middleware/traefik
 
 patches:
   - target:
