@@ -80,10 +80,16 @@ kubectl create secret docker-registry ghcr-secret \
   --docker-password=<PAT_TOKEN> \
   -n revieu-prod
 
-# 2. 数据库连接密钥
-kubectl create secret generic db-secret \
-  --from-literal=url="postgresql://user:pass@host:5432/db" \
-  -n revieu-prod
+# 2. 数据库连接密钥 (Using secrets.env)
+配置 `overlays/prod/apps/auth/secrets.env` 文件。
+**注意**：请勿在值两边添加引号，Kustomize 会将其作为值的一部分读取，导致认证失败。
+
+```env
+JWT_SECRET_KEY=my_super_secret_key
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password
+...
+```
 ```
 
 ### 2. 执行部署
@@ -139,6 +145,11 @@ kubectl logs -n kube-system -l app.kubernetes.io/name=traefik --tail=50
 
 ### 3. Namespace 粘滞性
 *   **注意**: 我们的 Ingress 和 Middleware 都在 `revieu-prod` 命名空间下。如果在 Ingress 注解中引用中间件，格式必须是 `NAMESPACE-NAME@kubernetescrd`，缺一不可。
+
+### 4. 数据库认证失败: password authentication failed
+*   **现象**: `revieu-auth` 日志显示 `password authentication failed for user ""postgres""`。
+*   **原因**: `secrets.env` 或 `kustomization.yaml` 中的变量值被双引号包裹（如 `USER="postgres"`）。
+*   **对策**: 移除所有配置文件中不必要的双引号。
 
 ## 🛡️ 生产环境建议 (Best Practices)
 
