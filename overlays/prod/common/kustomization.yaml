@@ -2,10 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../../base/namespace.yaml
-  - ../../../base/cluster-issuer.yaml
+  - ../../../base/common
   - ../../../base/postgres-external
-  - ../../../base/traefik-auth-middleware.yaml
 
 patches:
   - target:
