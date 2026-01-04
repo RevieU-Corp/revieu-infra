@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: auth
-          image: ghcr.io/revieu-corp/revieu-auth # 对应后端容器
+          image: ghcr.io/revieu-corp/revieu-auth-service # 对应后端容器
           ports:
             - containerPort: 8080
           envFrom:
