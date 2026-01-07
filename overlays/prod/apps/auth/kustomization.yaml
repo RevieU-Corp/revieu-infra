@@ -6,7 +6,7 @@ resources:
 
 images:
   - name: ghcr.io/revieu-corp/revieu-auth-service
-    newTag: sha-ac75800 # 对应 auth 的版本号
+    newTag: sha-4384e20 # 对应 auth 的版本号
 
 configMapGenerator:
   - name: revieu-auth-config
