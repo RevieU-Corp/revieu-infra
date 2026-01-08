@@ -6,7 +6,7 @@ metadata:
 spec:
   forwardAuth:
     # 鉴权后端地址
-    address: http://revieu-auth-service.revieu-prod.svc.cluster.local:8000/verify
+    address: http://revieu-auth-service.revieu-prod.svc.cluster.local:8080/verify
     # 将鉴权后端的这些请求头透传给业务逻辑 (例如 User-ID)
     authResponseHeaders:
       - X-User-ID
