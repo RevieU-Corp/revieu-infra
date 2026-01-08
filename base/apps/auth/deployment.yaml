@@ -20,9 +20,5 @@ spec:
           ports:
             - containerPort: 8080
           envFrom:
-            - configMapRef:
-                name: revieu-auth-config
-            - configMapRef:
-                name: revieu-auth-env-config
             - secretRef:
                 name: revieu-auth-secret
