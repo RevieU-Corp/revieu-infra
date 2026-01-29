@@ -41,7 +41,7 @@ data:
     [OUTPUT]
         Name            es
         Match           *
-        Host            elasticsearch.logging.svc.cluster.local
+        Host            elasticsearch.revieu-prod.svc.cluster.local
         Port            9200
         Logstash_Format On
         Retry_Limit     False
