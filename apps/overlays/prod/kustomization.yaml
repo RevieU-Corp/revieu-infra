@@ -10,6 +10,3 @@ resources:
   - ./apps/elasticsearch
   - ./external/postgres
   - ./middleware
-
-# Global Namespace
-namespace: revieu-prod
