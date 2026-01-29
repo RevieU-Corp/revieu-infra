@@ -4,17 +4,22 @@ metadata:
   name: argocd-server-ingress
   namespace: argocd
   annotations:
-    # 这些是所有环境通用的配置
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - argocd.weijun.online
+      secretName: argocd-server-tls
   rules:
-  - http: # 注意：这里我不写 host，代表匹配所有或者等待 overlay 注入
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              name: http
+    - host: argocd.weijun.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: http
