@@ -9,7 +9,7 @@ resources:
   - ./apps/web
   - ./apps/elasticsearch
   - ./external/postgres
-  - ./middleware/traefik
+  - ./middleware
 
 # Global Namespace
 namespace: revieu-prod
