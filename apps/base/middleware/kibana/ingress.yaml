@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - kibana.revieu.com
+        - kibana.weijun.online
       secretName: kibana-tls-secret
   rules:
-    - host: kibana.revieu.com
+    - host: kibana.weijun.online
       http:
         paths:
           - path: /
