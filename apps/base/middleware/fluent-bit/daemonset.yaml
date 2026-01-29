@@ -59,6 +59,8 @@ spec:
               readOnly: true
             - name: fluent-bit-config
               mountPath: /fluent-bit/etc/
+            - name: fluent-bit-data
+              mountPath: /fluent-bit/data
       volumes:
         - name: varlog
           hostPath:
@@ -69,3 +71,5 @@ spec:
         - name: fluent-bit-config
           configMap:
             name: fluent-bit-config
+        - name: fluent-bit-data
+          emptyDir: {}
