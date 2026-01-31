@@ -9,10 +9,14 @@ spec:
     # Let's Encrypt 生产环境服务器
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      # 存储账号私钥的 Secret 名称（自动生成，不用管）
+      # 存储账号私钥的 Secret 名称
       name: letsencrypt-prod-account-key
     solvers:
-      - http01:
-          ingress:
-            # 指定 ingress class 为 traefik
-            class: traefik
+      - dns01:
+          cloudflare:
+            # 这里的 email 是你的 Cloudflare 账号邮箱
+            email: liweijun0302@gmail.com
+            # 引用存储 API Token 的 Secret
+            apiTokenSecretRef:
+              name: cloudflare-api-token-secret
+              key: api-token
