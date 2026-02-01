@@ -5,7 +5,6 @@ kind: Kustomization
 # Grouped by service/component for better organization
 resources:
   - ./common
-  - ./apps/auth
   - ./apps/core
   - ./apps/web
   - ./external/postgres
