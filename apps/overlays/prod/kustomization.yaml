@@ -7,5 +7,4 @@ resources:
   - ./common
   - ./apps/core
   - ./apps/web
-  - ./external/postgres
   - ./middleware
