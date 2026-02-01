@@ -4,5 +4,7 @@ resources:
   - cert-manager/
   - fluent-bit/
   - kibana/
+  - loki/
+  - grafana/
   - traefik/
   - sealed-secrets/
