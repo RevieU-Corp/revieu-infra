@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: revieu-core-ingress
+  namespace: revieu-prod
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    # Strip /api/v1 prefix before forwarding to core service
+    traefik.ingress.kubernetes.io/router.middlewares: revieu-prod-strip-api-v1-prefix@kubernetescrd
+spec:
+  tls:
+    - hosts:
+        - revieu.weijun.online
+      secretName: revieu-web-tls-secret
+  rules:
+    - host: revieu.weijun.online
+      http:
+        paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: revieu-core-service
+                port:
+                  number: 8080
