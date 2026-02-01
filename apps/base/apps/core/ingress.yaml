@@ -5,13 +5,11 @@ metadata:
   namespace: revieu-prod
   annotations:
     kubernetes.io/ingress.class: traefik
-    # Strip /api/v1 prefix before forwarding to core service
-    traefik.ingress.kubernetes.io/router.middlewares: revieu-prod-strip-api-v1-prefix@kubernetescrd
 spec:
   tls:
     - hosts:
         - revieu.weijun.online
-      secretName: revieu-web-tls-secret
+      secretName: revieu-tls-cert
   rules:
     - host: revieu.weijun.online
       http:

@@ -4,7 +4,7 @@ metadata:
   name: revieu-cert
   namespace: revieu-prod
 spec:
-  secretName: revieu-web-tls-secret
+  secretName: revieu-tls-cert
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

@@ -14,7 +14,7 @@ spec:
   tls:
     - hosts:
         - revieu.weijun.online
-      secretName: revieu-web-tls-secret # 【重点】引用上面 Certificate 生成的 Secret
+      secretName: revieu-tls-cert # 【重点】引用上面 Certificate 生成的 Secret
   rules:
     - host: revieu.weijun.online
       http:
