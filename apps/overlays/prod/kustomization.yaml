@@ -7,6 +7,5 @@ resources:
   - ./common
   - ./apps/auth
   - ./apps/web
-  - ./apps/elasticsearch
   - ./external/postgres
   - ./middleware
