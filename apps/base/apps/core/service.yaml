@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: revieu-core-service
+spec:
+  type: ClusterIP
+  selector:
+    app: revieu-core
+  ports:
+    - port: 8080
+      targetPort: 8080

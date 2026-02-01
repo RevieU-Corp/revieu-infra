@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: revieu-core
+spec:
+  # replicas: 留给 overlays
+  selector:
+    matchLabels:
+      app: revieu-core
+  template:
+    metadata:
+      labels:
+        app: revieu-core
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: core
+          image: ghcr.io/revieu-corp/revieu-core
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: core-secrets

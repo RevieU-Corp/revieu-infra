@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - ./common
   - ./apps/auth
+  - ./apps/core
   - ./apps/web
   - ./external/postgres
   - ./middleware

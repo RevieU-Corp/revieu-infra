@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../base/apps/core
+  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/dev/apps/core/configs/sealed-secrets.yaml
+
+images:
+  - name: ghcr.io/revieu-corp/revieu-core
+    newTag: latest # 初始版本，后续通过 CI/CD 更新
