@@ -7,4 +7,4 @@ resources:
 
 images:
   - name: ghcr.io/revieu-corp/revieu-core
-    newTag: sha-f784cc2 # 初始版本，后续通过 CI/CD 更新
+    newTag: sha-5751c78 # 初始版本，后续通过 CI/CD 更新
