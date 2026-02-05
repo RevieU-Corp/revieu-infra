@@ -26,6 +26,21 @@ echo "==> Waiting for ArgoCD CRDs..."
 kubectl wait --for=condition=Established crd/applications.argoproj.io --timeout=120s
 kubectl wait --for=condition=Established crd/appprojects.argoproj.io --timeout=120s
 
+echo "==> Patching ArgoCD NetworkPolicies to allow egress traffic..."
+# 修复：ArgoCD默认NetworkPolicy只定义Ingress，会阻止所有Egress（DNS、API访问等）
+for np in argocd-application-controller-network-policy \
+           argocd-applicationset-controller-network-policy \
+           argocd-dex-server-network-policy \
+           argocd-notifications-controller-network-policy \
+           argocd-redis-network-policy \
+           argocd-repo-server-network-policy \
+           argocd-server-network-policy; do
+  kubectl patch networkpolicy "$np" -n argocd --type=json -p='[
+    {"op": "add", "path": "/spec/policyTypes/-", "value": "Egress"},
+    {"op": "add", "path": "/spec/egress", "value": [{}]}
+  ]' 2>/dev/null || echo "NetworkPolicy $np not found, skipping..."
+done
+
 echo "==> Waiting for ArgoCD server..."
 kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
 
