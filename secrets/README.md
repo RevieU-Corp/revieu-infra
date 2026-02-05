@@ -6,9 +6,9 @@
 
 ## 🔑 公钥位置
 
-- **Prod**: `k8s/sealed-secrets-prod.pem`
-- **Staging**: `k8s/sealed-secrets-staging.pem`（待生成）
-- **Dev**: `k8s/sealed-secrets-dev.pem`（待生成）
+- **Prod**: `secrets/sealed-secrets-prod.pem`
+- **Staging**: `secrets/sealed-secrets-staging.pem`（待生成）
+- **Dev**: `secrets/sealed-secrets-dev.pem`（待生成）
 
 ## 📝 Secret 模板
 
@@ -28,7 +28,7 @@ vim secrets/cloudflare-api-token-secret.yaml
 # 替换 <YOUR_CLOUDFLARE_API_TOKEN>
 
 # 3. 使用 kubeseal 加密
-kubeseal --format yaml --cert k8s/sealed-secrets-prod.pem \
+kubeseal --format yaml --cert secrets/sealed-secrets-prod.pem \
   < secrets/cloudflare-api-token-secret.yaml \
   > apps/overlays/prod/common/cloudflare-api-token-sealed.yaml
 
@@ -65,19 +65,19 @@ vim secrets/ghcr-credentials-secret.yaml
 
 # 4. 为每个环境加密
 # Prod:
-kubeseal --format yaml --cert k8s/sealed-secrets-prod.pem \
+kubeseal --format yaml --cert secrets/sealed-secrets-prod.pem \
   --namespace revieu-prod \
   < secrets/ghcr-credentials-secret.yaml \
   > apps/overlays/prod/common/ghcr-credentials-sealed.yaml
 
 # Staging:
-kubeseal --format yaml --cert k8s/sealed-secrets-staging.pem \
+kubeseal --format yaml --cert secrets/sealed-secrets-staging.pem \
   --namespace revieu-staging \
   < secrets/ghcr-credentials-secret.yaml \
   > apps/overlays/staging/common/ghcr-credentials-sealed.yaml
 
 # Dev:
-kubeseal --format yaml --cert k8s/sealed-secrets-dev.pem \
+kubeseal --format yaml --cert secrets/sealed-secrets-dev.pem \
   --namespace revieu-dev \
   < secrets/ghcr-credentials-secret.yaml \
   > apps/overlays/dev/common/ghcr-credentials-sealed.yaml
@@ -132,13 +132,13 @@ spec:
 
 ```bash
 # Prod
-ssh root@cc.weijun.online "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > k8s/sealed-secrets-prod.pem
+ssh root@cc.weijun.online "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > secrets/sealed-secrets-prod.pem
 
 # Staging
-ssh root@staging-server "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > k8s/sealed-secrets-staging.pem
+ssh root@staging-server "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > secrets/sealed-secrets-staging.pem
 
 # Dev
-ssh root@dev-server "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > k8s/sealed-secrets-dev.pem
+ssh root@dev-server "kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o jsonpath='{.items[0].data.tls\.crt}'" | base64 -d > secrets/sealed-secrets-dev.pem
 ```
 
 ### 验证 SealedSecret 是否正确解密
@@ -160,9 +160,8 @@ kubectl logs -n kube-system -l app.kubernetes.io/name=sealed-secrets
 
 ```
 revieu-infra/
-├── k8s/
-│   └── sealed-secrets-prod.pem          # 公钥（可提交）
 ├── secrets/
+│   ├── sealed-secrets-prod.pem          # 公钥（可提交）
 │   ├── README.md                        # 本文件
 │   ├── *.yaml.template                  # Secret 模板（可提交）
 │   └── *.yaml                           # 明文 Secret（不提交，添加到 .gitignore）
