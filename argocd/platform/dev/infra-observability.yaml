@@ -17,6 +17,7 @@ spec:
       exclude: '{cert-manager,sealed-secrets}/**'
   destination:
     server: https://kubernetes.default.svc
+    namespace: logging
   syncPolicy:
     automated:
       prune: true
