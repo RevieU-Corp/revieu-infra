@@ -16,8 +16,9 @@ patches:
         path: /spec/template/spec/containers/0/args/-
         value: --insecure
 
-  # 补丁：为所有 NetworkPolicy 添加 DNS Egress 规则
-  # 问题：默认 NetworkPolicy 只定义 Ingress，会阻止所有 Egress 流量（包括 DNS 查询）
+  # 补丁：为所有 NetworkPolicy 添加 Egress 规则
+  # 问题：默认 NetworkPolicy 只定义 Ingress，会阻止所有 Egress 流量
+  # 需要允许：1. DNS查询 2. Kubernetes API访问 3. Pod间通信 4. 外部访问（Git等）
   - target:
       kind: NetworkPolicy
     patch: |-
@@ -27,6 +28,7 @@ patches:
       - op: add
         path: /spec/egress
         value:
+          # 允许 DNS 查询到 kube-system
           - to:
             - namespaceSelector:
                 matchLabels:
@@ -36,7 +38,15 @@ patches:
               port: 53
             - protocol: TCP
               port: 53
+          # 允许访问 Kubernetes API Server
+          - to:
+            - namespaceSelector: {}
+              podSelector:
+                matchLabels:
+                  component: apiserver
+          # 允许所有出站流量（Pod间通信、外部Git仓库等）
           - to:
             - podSelector: {}
           - to:
             - namespaceSelector: {}
+          - {}
