@@ -45,9 +45,9 @@ data:
         Port            3100
         Labels          job=fluent-bit
         Auto_Kubernetes_Labels on
-        LabelKeys       level,logger,component
-        RemoveKeys      level,logger,component
-        LineFormat      json
+        Label_Keys      level,logger,component
+        Remove_Keys     level,logger,component
+        Line_Format     json
 
   parsers.conf: |
     [PARSER]
