@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-self-dev
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  labels:
+    app.kubernetes.io/name: argocd
+    environment: development
+spec:
+  project: applications
+  source:
+    repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+    targetRevision: main
+    path: apps/overlays/dev/apps/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        maxDuration: 3m

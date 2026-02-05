@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-observability-dev
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+    targetRevision: main
+    path: apps/overlays/dev/middleware
+    directory:
+      recurse: true
+      include: '{loki,grafana,fluent-bit,traefik}/**'
+      exclude: '{cert-manager,sealed-secrets}/**'
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

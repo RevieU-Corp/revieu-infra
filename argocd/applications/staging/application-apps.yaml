@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: application-apps-staging
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: applications
+  source:
+    repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+    targetRevision: main
+    path: argocd/applications/staging
+    directory:
+      recurse: false
+      include: '{argocd,web,core}.yaml'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

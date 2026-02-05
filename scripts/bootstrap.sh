@@ -1,35 +1,47 @@
 #!/bin/bash
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_URL="https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main"
+ENVIRONMENT="${1:-prod}"  # 默认 prod，可传参 dev/staging/prod
 
+echo "==> Bootstrapping environment: $ENVIRONMENT"
+
+# 1. 安装 cert-manager (前置依赖)
 echo "==> Installing cert-manager..."
-kubectl apply -k "$REPO_ROOT/apps/overlays/prod/middleware/cert-manager"
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.0/cert-manager.yaml
 
-echo "==> Waiting for cert-manager CRDs to be established..."
+echo "==> Waiting for cert-manager CRDs..."
 kubectl wait --for=condition=Established crd/certificates.cert-manager.io --timeout=120s
 kubectl wait --for=condition=Established crd/clusterissuers.cert-manager.io --timeout=120s
 
-echo "==> Waiting for cert-manager webhook to be ready..."
+echo "==> Waiting for cert-manager webhook..."
 kubectl -n cert-manager rollout status deployment/cert-manager-webhook --timeout=300s
 
-echo "==> Creating argocd namespace..."
-kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-
+# 2. 安装 ArgoCD
 echo "==> Installing ArgoCD..."
-kubectl apply -k "$REPO_ROOT/apps/overlays/prod/apps/argocd"
+kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-echo "==> Waiting for ArgoCD CRDs to be established..."
-kubectl wait --for=condition=Established crd/applications.argoproj.io --timeout=60s
+echo "==> Waiting for ArgoCD CRDs..."
+kubectl wait --for=condition=Established crd/applications.argoproj.io --timeout=120s
+kubectl wait --for=condition=Established crd/appprojects.argoproj.io --timeout=120s
 
-echo "==> Waiting for ArgoCD server to be ready..."
+echo "==> Waiting for ArgoCD server..."
 kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
 
-echo "==> Applying ArgoCD Applications..."
-kubectl apply -f "$REPO_ROOT/argocd/applications/"
+# 3. 创建 AppProjects
+echo "==> Creating AppProjects..."
+kubectl apply -f $REPO_URL/argocd/projects/platform-project.yaml
+kubectl apply -f $REPO_URL/argocd/projects/application-project.yaml
 
-echo "==> Bootstrap complete!"
+# 4. 部署 Root Application
+echo "==> Deploying Root Application for $ENVIRONMENT..."
+kubectl apply -f $REPO_URL/argocd/root/root-app-$ENVIRONMENT.yaml
+
+echo "==> Bootstrap complete for $ENVIRONMENT!"
 echo ""
 echo "To get the initial admin password:"
 echo "  kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
+echo ""
+echo "To access ArgoCD UI:"
+echo "  kubectl port-forward svc/argocd-server -n argocd 8080:443"

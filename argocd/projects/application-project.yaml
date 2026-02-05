@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: applications
+  namespace: argocd
+spec:
+  description: Business applications (web, core, argocd-self)
+  sourceRepos:
+    - https://github.com/RevieU-Corp/revieu-infra.git
+    - https://raw.githubusercontent.com/RevieU-Corp/*  # 允许拉取外部 sealed-secrets
+  destinations:
+    - namespace: 'revieu-*'
+      server: https://kubernetes.default.svc
+    - namespace: 'argocd'
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: 'apps'
+      kind: Deployment
+    - group: 'apps'
+      kind: StatefulSet
+    - group: ''
+      kind: Service
+    - group: 'networking.k8s.io'
+      kind: Ingress
+    - group: 'traefik.containo.us'
+      kind: IngressRoute
+    - group: 'traefik.containo.us'
+      kind: Middleware
+    - group: 'cert-manager.io'
+      kind: Certificate
+    - group: ''
+      kind: ConfigMap
+    - group: ''
+      kind: Secret
+    - group: 'bitnami.com'
+      kind: SealedSecret
+  orphanedResources:
+    warn: true

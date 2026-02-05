@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/common
+
+namespace: revieu-staging
+
+# Staging 环境补丁：使用测试域名和 staging 证书
+patches:
+  - target:
+      kind: ClusterIssuer
+      name: letsencrypt-prod
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: letsencrypt-staging
+      - op: replace
+        path: /spec/acme/server
+        value: https://acme-staging-v02.api.letsencrypt.org/directory
+      - op: replace
+        path: /spec/acme/email
+        value: staging@weijun.online
+
+  - target:
+      kind: Certificate
+      name: revieu-cert
+    patch: |-
+      - op: replace
+        path: /spec/dnsNames
+        value:
+          - staging.revieu.weijun.online
+      - op: replace
+        path: /spec/issuerRef/name
+        value: letsencrypt-staging

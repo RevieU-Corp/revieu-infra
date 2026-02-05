@@ -1,22 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: revieu-apps
+  name: platform-apps-dev
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
-  project: default
+  project: platform
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/prod
+    path: argocd/platform/dev
+    directory:
+      recurse: false
+      include: 'infra-*.yaml'
   destination:
     server: https://kubernetes.default.svc
-    namespace: revieu-prod
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

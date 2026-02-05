@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../base/apps/core
+  # Dev 环境不需要外部 sealed-secrets
+
+namespace: revieu-dev
+
+images:
+  - name: ghcr.io/revieu-corp/revieu-core
+    newTag: dev-latest
+
+patches:
+  - target:
+      kind: Deployment
+      name: revieu-core
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "256Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "512Mi"
+
+  - target:
+      kind: Ingress
+      name: revieu-core-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: dev.revieu.weijun.online

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+      targetRevision: main
+      path: argocd/platform/dev
+    - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+      targetRevision: main
+      path: argocd/applications/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false  # 安全：不自动删除子应用
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
