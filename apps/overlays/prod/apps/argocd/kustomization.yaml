@@ -15,3 +15,28 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/args/-
         value: --insecure
+
+  # 补丁：为所有 NetworkPolicy 添加 DNS Egress 规则
+  # 问题：默认 NetworkPolicy 只定义 Ingress，会阻止所有 Egress 流量（包括 DNS 查询）
+  - target:
+      kind: NetworkPolicy
+    patch: |-
+      - op: add
+        path: /spec/policyTypes/-
+        value: Egress
+      - op: add
+        path: /spec/egress
+        value:
+          - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+            ports:
+            - protocol: UDP
+              port: 53
+            - protocol: TCP
+              port: 53
+          - to:
+            - podSelector: {}
+          - to:
+            - namespaceSelector: {}
