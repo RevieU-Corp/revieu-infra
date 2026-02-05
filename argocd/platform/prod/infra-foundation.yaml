@@ -12,10 +12,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/prod/middleware
-    directory:
-      recurse: true
-      include: 'cert-manager/**'
+    path: apps/overlays/prod/middleware/cert-manager
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
