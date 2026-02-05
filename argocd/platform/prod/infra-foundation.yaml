@@ -15,7 +15,7 @@ spec:
     path: apps/overlays/prod/middleware
     directory:
       recurse: true
-      include: '{cert-manager,sealed-secrets}/**'
+      include: 'cert-manager/**'
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
