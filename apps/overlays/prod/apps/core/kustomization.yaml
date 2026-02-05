@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../../base/apps/core
-  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/dfa8733/apps/core/configs/sealed-secrets.yaml
+  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/3dc74a7/apps/core/configs/sealed-secrets.yaml
 
 images:
   - name: ghcr.io/revieu-corp/revieu-core
