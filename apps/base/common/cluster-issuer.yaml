@@ -18,5 +18,5 @@ spec:
             email: liweijun0302@gmail.com
             # 引用存储 API Token 的 Secret
             apiTokenSecretRef:
-              name: cloudflare-api-token-secret
+              name: cloudflare-api-token
               key: api-token

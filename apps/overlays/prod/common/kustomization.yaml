@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../../base/common
+  - cloudflare-api-token-sealed.yaml
+  - ghcr-credentials-sealed.yaml
 
 patches:
   - target:

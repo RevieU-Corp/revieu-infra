@@ -13,7 +13,7 @@ spec:
         app: revieu-core
     spec:
       imagePullSecrets:
-        - name: ghcr-secret
+        - name: ghcr-credentials
       containers:
         - name: core
           image: ghcr.io/revieu-corp/revieu-core
