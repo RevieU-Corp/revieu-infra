@@ -4,7 +4,52 @@ set -e
 REPO_URL="https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main"
 ENVIRONMENT="${1:-prod}"  # 默认 prod，可传参 dev/staging/prod
 
-echo "==> Bootstrapping environment: $ENVIRONMENT"
+echo "==> RevieU-Infra Bootstrap Script"
+echo "==> Environment: $ENVIRONMENT"
+echo ""
+
+# 前置检查
+echo "==> Performing pre-flight checks..."
+
+# 检查 kubectl
+if ! command -v kubectl &> /dev/null; then
+    echo "ERROR: kubectl not found. Please install kubectl first."
+    exit 1
+fi
+
+# 检查集群连接
+if ! kubectl cluster-info &> /dev/null; then
+    echo "ERROR: Cannot connect to Kubernetes cluster."
+    echo "Please ensure kubeconfig is properly configured."
+    exit 1
+fi
+
+# 检查节点状态
+echo "==> Checking cluster nodes..."
+kubectl get nodes
+NODE_COUNT=$(kubectl get nodes --no-headers | wc -l)
+echo "Found $NODE_COUNT node(s)"
+
+# 如果是多节点集群，检查 K3s flannel 配置
+if [ "$NODE_COUNT" -gt 1 ]; then
+    echo ""
+    echo "WARNING: Multi-node cluster detected!"
+    echo "If nodes are connected via VPN (e.g., WireGuard), ensure K3s is configured with:"
+    echo "  flannel-iface: <vpn-interface>  (e.g., wg0)"
+    echo ""
+    echo "Check: ip -d link show flannel.1"
+    echo "Should show: local <vpn-ip> dev <vpn-interface>"
+    echo ""
+    read -p "Continue? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborted. Please refer to docs/DEPLOYMENT.md for setup instructions."
+        exit 1
+    fi
+fi
+
+echo ""
+echo "==> Starting bootstrap for environment: $ENVIRONMENT"
 
 # 1. 安装 cert-manager (前置依赖)
 echo "==> Installing cert-manager..."
