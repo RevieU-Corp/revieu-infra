@@ -6,7 +6,7 @@ resources:
 
 images:
   - name: ghcr.io/revieu-corp/revieu-web
-    newTag: sha-9f2a6b1 # 具体的版本号
+    newTag: sha-37e7616 # 具体的版本号
 
 patches:
   - target:
