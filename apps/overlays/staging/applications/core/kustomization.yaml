@@ -15,15 +15,16 @@ patches:
       kind: Deployment
       name: revieu-core
     patch: |-
-      - op: replace
+      - op: add
         path: /spec/replicas
         value: 2
-      - op: replace
-        path: /spec/template/spec/containers/0/resources/requests/memory
-        value: "512Mi"
-      - op: replace
-        path: /spec/template/spec/containers/0/resources/limits/memory
-        value: "1Gi"
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            memory: "512Mi"
+          limits:
+            memory: "1Gi"
 
   - target:
       kind: Ingress
