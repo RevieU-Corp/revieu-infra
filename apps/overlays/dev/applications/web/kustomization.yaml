@@ -8,7 +8,7 @@ namespace: revieu-dev
 
 images:
   - name: ghcr.io/revieu-corp/revieu-web
-    newTag: dev-latest  # Dev 环境使用 latest tag
+    newTag: dev  # Dev 环境使用 dev tag
 
 patches:
   - target:
