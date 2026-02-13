@@ -168,14 +168,14 @@ git commit -m "Update secrets"
 
 # 4. Update infra repo reference
 cd revieu-infra
-# Edit apps/overlays/prod/apps/core/kustomization.yaml
+# Edit apps/overlays/prod/applications/core/kustomization.yaml
 # Update sealed-secrets URL to new commit SHA
 ```
 
 ## CI/CD Workflow
 
 1. **Build** new image: `ghcr.io/revieu-corp/revieu-core:sha-<commit>`
-2. **Update** `apps/overlays/ENV/apps/*/kustomization.yaml` with new tag
+2. **Update** `apps/overlays/ENV/applications/*/kustomization.yaml` with new tag
 3. **Commit** and push
 4. **ArgoCD** auto-deploys
 

@@ -7,18 +7,19 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/RevieU-Corp/revieu-infra.git
-    targetRevision: main
-    path: argocd/root/aggregators/prod
-    directory:
-      recurse: false
+  sources:
+    - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+      targetRevision: main
+      path: argocd/platform/prod
+    - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+      targetRevision: main
+      path: argocd/applications/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
     automated:
-      prune: false  # 安全：不自动删除子应用
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true

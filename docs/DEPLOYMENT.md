@@ -239,7 +239,7 @@ cd revieu-backend
 
 #### 更新 Infra 仓库引用
 
-编辑 `revieu-infra/apps/overlays/prod/apps/core/kustomization.yaml`，更新 sealed-secrets URL 为最新的 commit。
+编辑 `revieu-infra/apps/overlays/prod/applications/core/kustomization.yaml`，更新 sealed-secrets URL 为最新的 commit。
 
 ### Step 4: 验证部署
 

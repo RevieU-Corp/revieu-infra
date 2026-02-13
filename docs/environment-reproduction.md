@@ -45,7 +45,7 @@ git clone --depth 1 https://github.com/RevieU-Corp/revieu-infra.git /tmp/revieu-
 
 # 运行 bootstrap 脚本
 cd /tmp/revieu-infra
-bash scripts/bootstrap.sh
+bash scripts/bootstrap.sh prod
 
 # 清理临时文件
 cd ~
@@ -59,9 +59,7 @@ rm -rf /tmp/revieu-infra
 kubectl get applications -n argocd
 
 # 应该看到：
-# NAME                  SYNC STATUS   HEALTH STATUS
-# argocd-self-managed   Synced        Healthy
-# revieu-apps           Synced        Progressing/Healthy
+# root-app-prod 以及其子应用（infra-*, argocd-self-prod, revieu-web-prod, revieu-core-prod）
 
 # 检查所有 Pod 状态
 kubectl get pods -n revieu-prod
@@ -95,7 +93,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```bash
 # 方法 A: 使用 Kustomize（需要临时克隆仓库）
 git clone --depth 1 https://github.com/RevieU-Corp/revieu-infra.git /tmp/infra
-kubectl apply -k /tmp/infra/apps/overlays/prod/middleware/cert-manager
+kubectl apply -k /tmp/infra/apps/overlays/prod/infrastructure/cert-manager
 rm -rf /tmp/infra
 
 # 方法 B: 使用 Helm
@@ -121,7 +119,7 @@ kubectl create namespace argocd
 
 # 方法 A: 使用仓库中的配置（需要临时克隆）
 git clone --depth 1 https://github.com/RevieU-Corp/revieu-infra.git /tmp/infra
-kubectl apply -k /tmp/infra/apps/overlays/prod/apps/argocd
+kubectl apply -k /tmp/infra/apps/overlays/prod/applications/argocd
 rm -rf /tmp/infra
 
 # 方法 B: 使用官方安装
@@ -135,13 +133,16 @@ kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
 ### 3. 应用 ArgoCD Applications
 
 ```bash
-# 直接从 GitHub 应用
-kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/applications/argocd.yaml
-kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/applications/revieu-apps.yaml
+# 直接从 GitHub 应用 AppProjects + Root App
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/projects/platform-project.yaml
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/projects/application-project.yaml
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 
 # 或者临时克隆
 git clone --depth 1 https://github.com/RevieU-Corp/revieu-infra.git /tmp/infra
-kubectl apply -f /tmp/infra/argocd/applications/
+kubectl apply -f /tmp/infra/argocd/projects/platform-project.yaml
+kubectl apply -f /tmp/infra/argocd/projects/application-project.yaml
+kubectl apply -f /tmp/infra/argocd/root/root-app-prod.yaml
 rm -rf /tmp/infra
 ```
 
@@ -163,10 +164,10 @@ watch kubectl get pods -A
 
 ```bash
 # 检查同步策略
-kubectl -n argocd get application revieu-apps -o jsonpath='{.spec.syncPolicy}' | jq .
+kubectl -n argocd get application root-app-prod -o jsonpath='{.spec.syncPolicy}' | jq .
 
 # 如果缺少 automated 配置，重新应用 Application 定义
-kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/applications/revieu-apps.yaml
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 ```
 
 ### 证书未签发
@@ -255,7 +256,7 @@ kubectl describe pod <pod-name> -n <namespace>
 
 如果需要更新 ArgoCD Application 定义本身：
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/applications/revieu-apps.yaml
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 ```
 
 ## 参考文档

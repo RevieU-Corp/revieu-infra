@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/dev/apps/argocd
+    path: apps/overlays/dev/applications/argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

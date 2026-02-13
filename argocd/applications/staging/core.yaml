@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/staging/apps/core
+    path: apps/overlays/staging/applications/core
   destination:
     server: https://kubernetes.default.svc
     namespace: revieu-staging

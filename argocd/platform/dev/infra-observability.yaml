@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/dev/middleware
+    path: apps/overlays/dev/infrastructure
     directory:
       recurse: true
       include: '{loki,grafana,fluent-bit,traefik}/**'

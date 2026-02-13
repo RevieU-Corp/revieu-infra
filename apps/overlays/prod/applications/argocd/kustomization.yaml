@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+  - ../../../../base/applications/argocd
+
+patches:
+  # 补丁：开启 insecure 模式（Traefik 负责 TLS 终止）
+  - target:
+      kind: Deployment
+      name: argocd-server
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --insecure
+
+  # 补丁：为所有 NetworkPolicy 添加 Egress 规则，允许所有出站流量
+  # 问题：默认 NetworkPolicy 只定义 Ingress，会阻止所有 Egress 流量
+  # ArgoCD 需要访问：DNS、Kubernetes API、Redis、Git仓库等
+  - target:
+      kind: NetworkPolicy
+    patch: |-
+      - op: add
+        path: /spec/policyTypes/-
+        value: Egress
+      - op: add
+        path: /spec/egress
+        value:
+          - {}

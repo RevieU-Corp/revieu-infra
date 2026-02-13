@@ -41,7 +41,7 @@ cd "$TEMP_DIR"
 
 echo ""
 echo "==> Installing cert-manager..."
-kubectl apply -k "$TEMP_DIR/apps/overlays/prod/middleware/cert-manager"
+kubectl apply -k "$TEMP_DIR/apps/overlays/prod/infrastructure/cert-manager"
 
 echo ""
 echo "==> Waiting for cert-manager CRDs to be established..."
@@ -58,19 +58,25 @@ kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 
 echo ""
 echo "==> Installing ArgoCD..."
-kubectl apply -k "$TEMP_DIR/apps/overlays/prod/apps/argocd"
+kubectl apply -k "$TEMP_DIR/apps/overlays/prod/applications/argocd"
 
 echo ""
 echo "==> Waiting for ArgoCD CRDs to be established..."
 kubectl wait --for=condition=Established crd/applications.argoproj.io --timeout=60s
+kubectl wait --for=condition=Established crd/appprojects.argoproj.io --timeout=60s
 
 echo ""
 echo "==> Waiting for ArgoCD server to be ready..."
 kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
 
 echo ""
-echo "==> Applying ArgoCD Applications..."
-kubectl apply -f "$TEMP_DIR/argocd/applications/"
+echo "==> Creating AppProjects..."
+kubectl apply -f "$TEMP_DIR/argocd/projects/platform-project.yaml"
+kubectl apply -f "$TEMP_DIR/argocd/projects/application-project.yaml"
+
+echo ""
+echo "==> Deploying Root App (prod)..."
+kubectl apply -f "$TEMP_DIR/argocd/root/root-app-prod.yaml"
 
 echo ""
 echo "==> Cleaning up temporary files..."

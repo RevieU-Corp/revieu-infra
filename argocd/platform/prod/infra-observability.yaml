@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/prod/middleware/observability
+    path: apps/overlays/prod/infrastructure/observability
   destination:
     server: https://kubernetes.default.svc
     namespace: logging

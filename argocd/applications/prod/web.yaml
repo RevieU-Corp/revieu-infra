@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/prod/apps/web
+    path: apps/overlays/prod/applications/web
   destination:
     server: https://kubernetes.default.svc
     namespace: revieu-prod

@@ -3,8 +3,8 @@ kind: Kustomization
 
 resources:
   - ./common
-  - ./apps/web
-  - ./apps/core
-  - ./middleware
+  - ./applications/web
+  - ./applications/core
+  - ./infrastructure
 
 namespace: revieu-staging

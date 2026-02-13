@@ -181,7 +181,7 @@ kubectl delete -f argocd/root/root-app-prod.yaml
 ### Update Application Image
 ```bash
 # Edit the kustomization.yaml in the appropriate overlay
-cd apps/overlays/prod/apps/web
+cd apps/overlays/prod/applications/web
 # Edit kustomization.yaml to change newTag
 git commit -m "Update web image to new-tag"
 git push

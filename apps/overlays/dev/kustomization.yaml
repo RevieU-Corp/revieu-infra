@@ -4,8 +4,8 @@ kind: Kustomization
 # Dev 环境主入口
 resources:
   - ./common
-  - ./apps/web
-  - ./apps/core
-  - ./middleware
+  - ./applications/web
+  - ./applications/core
+  - ./infrastructure
 
 namespace: revieu-dev  # Dev 环境命名空间
