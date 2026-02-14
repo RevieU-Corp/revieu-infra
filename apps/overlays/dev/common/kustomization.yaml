@@ -7,7 +7,7 @@ resources:
 
 namespace: revieu-dev
 
-# Dev 环境补丁：使用测试域名和 staging 证书
+# Dev 环境补丁：使用测试域名 + 受信任的生产证书（Let's Encrypt production）
 patches:
   - target:
       kind: ClusterIssuer
@@ -15,13 +15,13 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/name
-        value: letsencrypt-staging-dev
+        value: letsencrypt-prod-dev
       - op: replace
         path: /spec/acme/server
-        value: https://acme-staging-v02.api.letsencrypt.org/directory
+        value: https://acme-v02.api.letsencrypt.org/directory
       - op: replace
         path: /spec/acme/privateKeySecretRef/name
-        value: letsencrypt-staging-dev-account-key
+        value: letsencrypt-prod-dev-account-key
 
   - target:
       kind: Certificate
@@ -33,4 +33,4 @@ patches:
           - dev.revieu.weijun.online
       - op: replace
         path: /spec/issuerRef/name
-        value: letsencrypt-staging-dev
+        value: letsencrypt-prod-dev
