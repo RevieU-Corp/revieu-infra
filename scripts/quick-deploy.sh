@@ -6,10 +6,20 @@ set -e
 
 REPO_URL="https://github.com/RevieU-Corp/revieu-infra.git"
 TEMP_DIR="/tmp/revieu-infra-deploy-$$"
+ENVIRONMENT="${1:-prod}"
+
+case "$ENVIRONMENT" in
+  dev|staging|prod) ;;
+  *)
+    echo "❌ Invalid environment '$ENVIRONMENT'. Expected one of: dev, staging, prod."
+    exit 1
+    ;;
+esac
 
 echo "======================================"
 echo "RevieU Infrastructure Quick Deploy"
 echo "======================================"
+echo "Environment: $ENVIRONMENT"
 echo ""
 
 # 检查是否已安装 kubectl
@@ -41,7 +51,7 @@ cd "$TEMP_DIR"
 
 echo ""
 echo "==> Installing cert-manager..."
-kubectl apply -k "$TEMP_DIR/apps/overlays/prod/infrastructure/cert-manager"
+kubectl apply -k "$TEMP_DIR/apps/base/infrastructure/cert-manager"
 
 echo ""
 echo "==> Waiting for cert-manager CRDs to be established..."
@@ -75,8 +85,9 @@ kubectl apply -f "$TEMP_DIR/argocd/projects/platform-project.yaml"
 kubectl apply -f "$TEMP_DIR/argocd/projects/application-project.yaml"
 
 echo ""
-echo "==> Deploying Root App (prod)..."
-kubectl apply -f "$TEMP_DIR/argocd/root/root-app-prod.yaml"
+echo "==> Deploying Root Apps (platform + $ENVIRONMENT)..."
+kubectl apply -f "$TEMP_DIR/argocd/root/root-app-platform.yaml"
+kubectl apply -f "$TEMP_DIR/argocd/root/root-app-$ENVIRONMENT.yaml"
 
 echo ""
 echo "==> Cleaning up temporary files..."

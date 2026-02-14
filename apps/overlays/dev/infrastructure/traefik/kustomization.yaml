@@ -3,3 +3,14 @@ kind: Kustomization
 
 resources:
   - ../../../../base/infrastructure/traefik
+
+namespace: revieu-dev
+
+patches:
+  - target:
+      kind: Middleware
+      name: revieu-auth-middleware
+    patch: |-
+      - op: replace
+        path: /spec/forwardAuth/address
+        value: http://revieu-auth-service.revieu-dev.svc.cluster.local:8080/verify

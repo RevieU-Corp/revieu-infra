@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: revieu-common-prod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "9"
+  labels:
+    app.kubernetes.io/name: common
+    environment: production
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/RevieU-Corp/revieu-infra.git
+    targetRevision: main
+    path: apps/overlays/prod/common
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: revieu-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        maxDuration: 2m

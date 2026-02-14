@@ -59,7 +59,7 @@ rm -rf /tmp/revieu-infra
 kubectl get applications -n argocd
 
 # 应该看到：
-# root-app-prod 以及其子应用（infra-*, argocd-self-prod, revieu-web-prod, revieu-core-prod）
+# root-app-platform、root-app-prod 以及其子应用
 
 # 检查所有 Pod 状态
 kubectl get pods -n revieu-prod
@@ -133,15 +133,17 @@ kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
 ### 3. 应用 ArgoCD Applications
 
 ```bash
-# 直接从 GitHub 应用 AppProjects + Root App
+# 直接从 GitHub 应用 AppProjects + Root Apps
 kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/projects/platform-project.yaml
 kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/projects/application-project.yaml
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-platform.yaml
 kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 
 # 或者临时克隆
 git clone --depth 1 https://github.com/RevieU-Corp/revieu-infra.git /tmp/infra
 kubectl apply -f /tmp/infra/argocd/projects/platform-project.yaml
 kubectl apply -f /tmp/infra/argocd/projects/application-project.yaml
+kubectl apply -f /tmp/infra/argocd/root/root-app-platform.yaml
 kubectl apply -f /tmp/infra/argocd/root/root-app-prod.yaml
 rm -rf /tmp/infra
 ```
@@ -163,10 +165,11 @@ watch kubectl get pods -A
 ### ArgoCD 应用显示 OutOfSync
 
 ```bash
-# 检查同步策略
+# 检查同步策略（环境 root）
 kubectl -n argocd get application root-app-prod -o jsonpath='{.spec.syncPolicy}' | jq .
 
 # 如果缺少 automated 配置，重新应用 Application 定义
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-platform.yaml
 kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 ```
 
@@ -256,6 +259,7 @@ kubectl describe pod <pod-name> -n <namespace>
 
 如果需要更新 ArgoCD Application 定义本身：
 ```bash
+kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-platform.yaml
 kubectl apply -f https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main/argocd/root/root-app-prod.yaml
 ```
 

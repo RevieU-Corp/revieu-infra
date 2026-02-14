@@ -19,8 +19,8 @@ patches:
         path: /spec/acme/server
         value: https://acme-staging-v02.api.letsencrypt.org/directory
       - op: replace
-        path: /spec/acme/email
-        value: dev@weijun.online
+        path: /spec/acme/privateKeySecretRef/name
+        value: letsencrypt-staging-dev-account-key
 
   - target:
       kind: Certificate

@@ -1,20 +1,23 @@
 # RevieU-Infra App of Apps Architecture
 
-This repository implements a production-grade **App of Apps** pattern for ArgoCD, supporting three environments (dev, staging, prod) with clear separation of concerns.
+This repository implements an **App of Apps** pattern for ArgoCD on a single cluster, with shared platform components and separate dev/staging/prod application roots.
 
 ## 🏗️ Architecture Overview
 
 ```
+Root App (shared platform)
+└── Platform Apps
+    ├── infra-foundation-shared (Wave 0: cert-manager)
+    ├── infra-sealed-secrets-shared (Wave 0: sealed-secrets)
+    ├── infra-core-shared (Wave 1: shared DNS secret)
+    ├── infra-observability-shared (Wave 2: loki/grafana/fluent-bit)
+    └── argocd-self-shared (Wave 10: ArgoCD self-management)
+
 Root App (per environment)
-├── Platform Apps (infrastructure layer)
-│   ├── infra-foundation (Wave 0: cert-manager, sealed-secrets)
-│   ├── infra-core (Wave 1: namespace, ClusterIssuer, Certificate)
-│   └── infra-observability (Wave 2: loki, grafana, fluent-bit, traefik)
-│
-└── Application Apps (business layer)
-    ├── argocd-self (Wave 10: ArgoCD self-management)
-    ├── web (Wave 11: frontend application)
-    └── core (Wave 11: backend API)
+└── Application Apps (business + env common)
+    ├── revieu-common-<env> (Wave 9: namespace/cert/issuer)
+    ├── revieu-web-<env> (Wave 11)
+    └── revieu-core-<env> (Wave 11)
 ```
 
 ## 📂 Directory Structure
@@ -23,23 +26,17 @@ Root App (per environment)
 revieu-infra/
 ├── argocd/
 │   ├── root/                          # Root applications (entry points)
+│   │   ├── root-app-platform.yaml
 │   │   ├── root-app-dev.yaml
 │   │   ├── root-app-staging.yaml
 │   │   └── root-app-prod.yaml
 │   │
 │   ├── platform/                      # Platform infrastructure apps
-│   │   ├── dev/
-│   │   │   ├── platform-apps.yaml      # Aggregator
-│   │   │   ├── infra-foundation.yaml   # Wave 0
-│   │   │   ├── infra-core.yaml         # Wave 1
-│   │   │   └── infra-observability.yaml # Wave 2
-│   │   ├── staging/
-│   │   └── prod/
+│   │   └── shared/
 │   │
 │   ├── applications/                  # Business applications
 │   │   ├── dev/
-│   │   │   ├── application-apps.yaml   # Aggregator
-│   │   │   ├── argocd.yaml            # Wave 10
+│   │   │   ├── common.yaml            # Wave 9
 │   │   │   ├── web.yaml               # Wave 11
 │   │   │   └── core.yaml              # Wave 11
 │   │   ├── staging/
@@ -52,17 +49,17 @@ revieu-infra/
 ├── apps/
 │   ├── base/                          # Base Kubernetes manifests
 │   │   ├── common/                    # Namespace, ClusterIssuer, Certificate
-│   │   ├── middleware/                # cert-manager, traefik, loki, etc.
-│   │   └── apps/                      # ArgoCD, web, core
+│   │   ├── infrastructure/            # cert-manager, sealed-secrets, logging, traefik middleware
+│   │   └── applications/              # ArgoCD, web, core
 │   │
 │   └── overlays/                      # Environment-specific configs
 │       ├── dev/
-│       │   ├── kustomization.yaml
 │       │   ├── common/
-│       │   ├── middleware/
-│       │   └── apps/{web,core,argocd}/
+│       │   ├── infrastructure/
+│       │   └── applications/{web,core,argocd}/
 │       ├── staging/
-│       └── prod/
+│       ├── prod/
+│       └── shared/
 │
 └── scripts/
     └── bootstrap.sh                   # Multi-environment bootstrap script
@@ -87,8 +84,9 @@ The bootstrap script will:
 1. Install cert-manager
 2. Install ArgoCD
 3. Create AppProjects (platform and applications)
-4. Deploy the Root App for the specified environment
-5. ArgoCD will automatically deploy all child applications
+4. Deploy the shared platform root app
+5. Deploy the root app for the specified environment
+6. ArgoCD will automatically deploy all child applications
 
 ### Access ArgoCD UI
 
@@ -106,11 +104,12 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 Applications deploy in the following order:
 
-- **Wave 0**: Foundation (cert-manager, sealed-secrets)
-- **Wave 1**: Core infrastructure (namespace, ClusterIssuer, Certificate)
-- **Wave 2**: Observability (loki, grafana, fluent-bit, traefik)
+- **Wave 0**: Shared foundation (cert-manager, sealed-secrets)
+- **Wave 1**: Shared core secrets
+- **Wave 2**: Shared observability
+- **Wave 9**: Environment common resources (namespace, ClusterIssuer, Certificate)
 - **Wave 10**: ArgoCD self-management
-- **Wave 11**: Business applications (web, core)
+- **Wave 11**: Environment applications (web, core)
 
 ## 🌍 Environment Configuration
 
@@ -132,12 +131,12 @@ Two AppProjects provide RBAC isolation:
 ### Platform Project
 - **Scope**: Infrastructure components
 - **Permissions**: Full cluster access
-- **Components**: cert-manager, traefik, loki, grafana, sealed-secrets
+- **Components**: cert-manager, loki, grafana, sealed-secrets, env common
 
 ### Applications Project
 - **Scope**: Business applications
 - **Permissions**: Limited to revieu-* namespaces
-- **Components**: web, core, argocd-self
+- **Components**: web, core
 
 ## 🔐 Sync Policies
 
@@ -158,7 +157,7 @@ Two AppProjects provide RBAC isolation:
 ✅ **Sync Waves**: Ordered deployment with dependency management
 ✅ **Self-Healing**: Automatic drift correction
 ✅ **RBAC Isolation**: AppProjects enforce least privilege
-✅ **Disaster Recovery**: Single Root App deployment restores entire environment
+✅ **Disaster Recovery**: Shared platform root + env root can restore the full stack
 
 ## 🔧 Managing the Stack
 
@@ -169,6 +168,7 @@ kubectl get applications -n argocd
 
 ### Sync All Applications
 ```bash
+argocd app sync root-app-platform --cascade
 argocd app sync root-app-prod --cascade
 ```
 

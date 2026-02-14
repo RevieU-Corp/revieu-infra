@@ -52,6 +52,10 @@ Deploy the infrastructure:
 ./scripts/bootstrap.sh staging
 ```
 
+`bootstrap.sh` deploys two roots in order:
+1. `root-app-platform` (shared cluster components)
+2. `root-app-<environment>` (environment-specific applications)
+
 ### Access ArgoCD UI
 
 ```bash
@@ -73,17 +77,18 @@ revieu-infra/
 ├── apps/
 │   ├── base/                    # Base manifests
 │   │   ├── common/             # Namespace, ClusterIssuer, Certificate
-│   │   ├── middleware/         # Traefik, Loki, Grafana, etc.
-│   │   └── apps/               # Web, Core applications
+│   │   ├── infrastructure/     # cert-manager, sealed-secrets, logging, traefik middleware
+│   │   └── applications/       # Web, Core, ArgoCD
 │   └── overlays/               # Environment-specific configs
 │       ├── dev/
 │       ├── staging/
-│       └── prod/
+│       ├── prod/
+│       └── shared/
 │
 ├── argocd/
-│   ├── root/                   # Root Applications
-│   ├── platform/               # Infrastructure apps (per environment)
-│   ├── applications/           # Business apps (per environment)
+│   ├── root/                   # Root Applications (platform + env)
+│   ├── platform/               # Shared platform apps
+│   ├── applications/           # Env-specific common + business apps
 │   └── projects/               # AppProjects (RBAC)
 │
 ├── scripts/

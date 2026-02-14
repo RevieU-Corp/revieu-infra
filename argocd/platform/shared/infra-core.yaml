@@ -1,30 +1,29 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-self-staging
+  name: infra-core-shared
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  labels:
-    app.kubernetes.io/name: argocd
-    environment: staging
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: platform
   source:
     repoURL: https://github.com/RevieU-Corp/revieu-infra.git
     targetRevision: main
-    path: apps/overlays/staging/applications/argocd
+    path: apps/overlays/shared/platform
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: cert-manager
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - ServerSideApply=true
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
     retry:
-      limit: 5
+      limit: 3
       backoff:
         duration: 5s
-        maxDuration: 3m
+        factor: 2
+        maxDuration: 2m

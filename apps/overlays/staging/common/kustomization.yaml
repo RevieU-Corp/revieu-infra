@@ -21,6 +21,9 @@ patches:
       - op: replace
         path: /spec/acme/email
         value: staging@weijun.online
+      - op: replace
+        path: /spec/acme/privateKeySecretRef/name
+        value: letsencrypt-staging-account-key
 
   - target:
       kind: Certificate

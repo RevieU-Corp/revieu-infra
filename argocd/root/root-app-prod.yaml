@@ -10,9 +10,6 @@ spec:
   sources:
     - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
       targetRevision: main
-      path: argocd/platform/prod
-    - repoURL: https://github.com/RevieU-Corp/revieu-infra.git
-      targetRevision: main
       path: argocd/applications/prod
   destination:
     server: https://kubernetes.default.svc

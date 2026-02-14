@@ -33,3 +33,6 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: dev.revieu.weijun.online
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: dev.revieu.weijun.online

@@ -4,6 +4,14 @@ set -e
 REPO_URL="https://raw.githubusercontent.com/RevieU-Corp/revieu-infra/main"
 ENVIRONMENT="${1:-prod}"  # 默认 prod，可传参 dev/staging/prod
 
+case "$ENVIRONMENT" in
+  dev|staging|prod) ;;
+  *)
+    echo "ERROR: invalid environment '$ENVIRONMENT'. Expected one of: dev, staging, prod."
+    exit 1
+    ;;
+esac
+
 echo "==> RevieU-Infra Bootstrap Script"
 echo "==> Environment: $ENVIRONMENT"
 echo ""
@@ -94,8 +102,11 @@ echo "==> Creating AppProjects..."
 kubectl apply -f $REPO_URL/argocd/projects/platform-project.yaml
 kubectl apply -f $REPO_URL/argocd/projects/application-project.yaml
 
-# 4. 部署 Root Application
-echo "==> Deploying Root Application for $ENVIRONMENT..."
+# 4. 部署 Root Applications（共享平台 + 环境应用）
+echo "==> Deploying shared platform Root Application..."
+kubectl apply -f $REPO_URL/argocd/root/root-app-platform.yaml
+
+echo "==> Deploying environment Root Application for $ENVIRONMENT..."
 kubectl apply -f $REPO_URL/argocd/root/root-app-$ENVIRONMENT.yaml
 
 echo "==> Bootstrap complete for $ENVIRONMENT!"
