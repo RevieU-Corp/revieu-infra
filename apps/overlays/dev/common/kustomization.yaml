@@ -17,6 +17,9 @@ patches:
         path: /metadata/name
         value: letsencrypt-prod-dev
       - op: replace
+        path: /spec/acme/email
+        value: liweijun0302@gmail.com
+      - op: replace
         path: /spec/acme/server
         value: https://acme-v02.api.letsencrypt.org/directory
       - op: replace
