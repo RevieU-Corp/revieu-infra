@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../base/common
+  - ghcr-credentials-sealed.yaml
 
 namespace: revieu-dev
 
