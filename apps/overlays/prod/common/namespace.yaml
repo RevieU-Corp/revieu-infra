@@ -1,0 +1,5 @@
+# base/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: revieu-prod # 这里的名字其实会被 overlay 覆盖，但必须要写

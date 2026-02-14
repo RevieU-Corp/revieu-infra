@@ -30,13 +30,13 @@ vim secrets/cloudflare-api-token-secret.yaml
 # 3. 使用 kubeseal 加密
 kubeseal --format yaml --cert secrets/sealed-secrets-prod.pem \
   < secrets/cloudflare-api-token-secret.yaml \
-  > apps/overlays/prod/common/cloudflare-api-token-sealed.yaml
+  > apps/overlays/shared/platform/cloudflare-api-token-sealed.yaml
 
 # 4. 删除明文文件
 rm secrets/cloudflare-api-token-secret.yaml
 
 # 5. 提交加密后的 SealedSecret
-git add apps/overlays/prod/common/cloudflare-api-token-sealed.yaml
+git add apps/overlays/shared/platform/cloudflare-api-token-sealed.yaml
 git commit -m "feat(secrets): add cloudflare API token for DNS01"
 git push
 ```
