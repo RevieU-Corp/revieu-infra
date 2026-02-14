@@ -1,24 +1,13 @@
-name: 🧹 Chore (杂务)
-description: 构建过程或辅助工具变动 (Changes to the build process or auxiliary tools)
-title: "[chore]: "
+name: "Chore"
+description: Track build process or auxiliary tool changes.
+title: "chore(scope): <title>"
 labels: ["chore"]
 body:
   - type: textarea
     id: task
     attributes:
-      label: 任务描述
-      description: 请描述需要执行的杂务或工具变更。
-      placeholder: 更新 Dockerfile 基础镜像，升级依赖库...
+      label: Task Description
+      description: Describe the maintenance task or tooling change.
+      placeholder: e.g. Update Dockerfile base image, upgrade dependencies...
     validations:
       required: true
-
-  - type: checkboxes
-    id: team
-    attributes:
-      label: 负责团队 (Team Selection)
-      description: 请选择负责处理或跟进此 Issues 的团队。
-      options:
-        - label: 🖥️ Backend (后端)
-        - label: 🎨 Frontend (前端)
-        - label: ⚙️ DevOps / Infra (运维/基础架构)
-        - label: 📝 Documentation (文档)

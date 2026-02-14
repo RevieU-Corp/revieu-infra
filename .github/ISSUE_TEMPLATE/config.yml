@@ -1,8 +1,8 @@
-# 禁止用户点击 "New Issue" 后直接创建一个不带模板的空白 Issue
+# Prevent users from creating blank issues without a template
 blank_issues_enabled: false
 
-# 如果用户的问题不属于 Bug 或新功能，引导他们去别的地方（如果有的话）
+# Direct users to discussions for general questions
 contact_links:
-  - name: 💬 提问或讨论
+  - name: Questions or Discussions
     url: https://github.com/YOUR_ORG/YOUR_REPO/discussions
-    about: 如果你只是有疑问而不是报告 Bug，请点击这里。
+    about: If you have a question rather than a bug report, please go here.

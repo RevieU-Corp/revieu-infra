@@ -1,51 +1,43 @@
-name: 🐛 Bug Report (错误报告)
-description: 提交一个 Bug 帮助我们修复问题
-title: "[fix]: "
+name: "Bug Report"
+description: Report a bug to help us fix issues.
+title: "fix(scope): <title>"
 labels: ["bug", "triage"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        感谢反馈！请尽量详细填写以下信息，这对我们快速定位问题非常有帮助。
-
   - type: textarea
     id: description
     attributes:
-      label: 问题描述
-      description: 请清晰简洁地描述发生了什么问题。
-      placeholder: 比如：点击登录按钮后页面白屏，没有任何反应...
+      label: Description
+      description: Provide a clear and concise description of the bug.
+      placeholder: e.g. Clicking the login button causes a blank screen with no response...
     validations:
       required: true
 
   - type: textarea
     id: steps
     attributes:
-      label: 复现步骤
-      description: 我们该如何重现这个错误？
+      label: Steps to Reproduce
+      description: How can we reproduce this bug?
       placeholder: |
-        1. 进入首页
-        2. 点击 '...'
-        3. 滚动到底部
-        4. 看到了错误
+        1. Go to the home page
+        2. Click on '...'
+        3. Scroll to the bottom
+        4. Observe the error
     validations:
       required: true
 
-  - type: checkboxes
-    id: team
+  - type: textarea
+    id: expected
     attributes:
-      label: 负责团队 (Team Selection)
-      description: 请选择负责处理或跟进此 Issues 的团队。
-      options:
-        - label: 🖥️ Backend (后端)
-        - label: 🎨 Frontend (前端)
-        - label: ⚙️ DevOps / Infra (运维/基础架构)
-        - label: 📝 Documentation (文档)
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
 
   - type: input
     id: environment
     attributes:
-      label: 运行环境
-      description: 你的操作系统、浏览器版本或 App 版本。
+      label: Environment
+      description: Your operating system, browser version, or app version.
       placeholder: Chrome 120 / iOS 17 / Windows 11
     validations:
       required: true
@@ -53,14 +45,14 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: 截图或日志 (可选)
-      description: 如果有报错截图或 Console 日志，请粘贴在这里。
+      label: Screenshots or Logs
+      description: If applicable, paste screenshots or console logs here.
       render: shell
 
   - type: checkboxes
     id: terms
     attributes:
-      label: 提交前确认
+      label: Duplicate Check
       options:
-        - label: 我已经搜索过现有的 Issue，确保没有重复提交
+        - label: I have searched existing issues and confirmed this is not a duplicate.
           required: true

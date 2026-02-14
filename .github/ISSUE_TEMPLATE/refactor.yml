@@ -1,13 +1,13 @@
-name: 🔨 Refactor / Tech Debt (技术优化)
-description: 记录代码重构、依赖升级或技术债清理
-title: "[refactor]: "
+name: "Refactor / Tech Debt"
+description: Track code refactoring, dependency upgrades, or tech debt cleanup.
+title: "refactor(scope): <title>"
 labels: ["maintenance", "internal"]
 body:
   - type: textarea
     id: target
     attributes:
-      label: 目标模块/文件
-      description: 哪个部分的代码需要优化？
+      label: Target Module/File
+      description: Which part of the code needs refactoring?
       placeholder: src/components/Auth.tsx
     validations:
       required: true
@@ -15,25 +15,13 @@ body:
   - type: textarea
     id: reason
     attributes:
-      label: 优化原因
-      description: 为什么要改？(性能问题、代码难以维护、库版本过旧)
-      placeholder: 目前的鉴权逻辑耦合太重，导致添加新的登录方式很困难...
+      label: Reason for Refactoring
+      description: Why does this need to change? (e.g. performance, maintainability, outdated dependency)
     validations:
       required: true
-
-  - type: checkboxes
-    id: team
-    attributes:
-      label: 负责团队 (Team Selection)
-      description: 请选择负责处理或跟进此 Issues 的团队。
-      options:
-        - label: 🖥️ Backend (后端)
-        - label: 🎨 Frontend (前端)
-        - label: ⚙️ DevOps / Infra (运维/基础架构)
-        - label: 📝 Documentation (文档)
 
   - type: textarea
     id: proposal
     attributes:
-      label: 改进思路 (可选)
-      description: 既然是你提的，你有什么重构思路吗？
+      label: Proposed Approach
+      description: If you have a refactoring strategy in mind, describe it here.

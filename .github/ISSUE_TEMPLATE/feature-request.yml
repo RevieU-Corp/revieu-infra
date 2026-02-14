@@ -1,49 +1,78 @@
-name: ✨ Feature Request (新功能建议)
-description: 建议一个新功能或改进
-title: "[feat]: "
-labels: ["enhancement", "discussion"]
+name: "Feature Request"
+description: Standardized template for RevieU features with User Stories and Checklists.
+title: "feat(scope): <title>"
+labels: ["feat"]
 body:
   - type: markdown
     attributes:
       value: |
-        你有好的想法？太棒了！请告诉我们你想解决什么问题。
+        ### RevieU Development Specification
+        Ensure all architectural requirements are addressed. 
+        **Note: Priority must be managed directly in the GitHub Project board.**
 
   - type: textarea
-    id: problem
+    id: user-story
     attributes:
-      label: 你遇到了什么痛点？
-      description: 这个功能是用来解决什么问题的？
-      placeholder: 我发现在使用导出功能时，总是需要重复手动修改文件名，非常浪费时间...
+      label: 1. User Story
+      description: Describe the requirement from the user's perspective.
+      placeholder: |
+        - AS A [user type/role]
+        - I WANT TO [perform some action]
+        - SO THAT [some value or benefit is achieved]
     validations:
       required: true
 
   - type: textarea
-    id: solution
+    id: tech-specs
     attributes:
-      label: 你期望的解决方案
-      description: 你希望这个功能是什么样子的？
-      placeholder: 希望在导出弹窗里可以直接自定义文件名前缀...
+      label: 2. Technical Specifications
+      description: Architecture design, database schema, or infra requirements.
+      placeholder: |
+        - API Endpoint: [METHOD] /path
+        - Database: Schema migrations or new fields
+        - Infrastructure: Env vars, Redis, S3, or other dependencies
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: 3. Acceptance Criteria
+      description: Use Given/When/Then format to define success.
+      placeholder: |
+        - Given: [pre-condition]
+        - When: [action]
+        - Then: [expected result]
     validations:
       required: true
 
   - type: checkboxes
-    id: team
+    id: implementation-checklist
     attributes:
-      label: 负责团队 (Team Selection)
-      description: 请选择负责处理或跟进此 Issues 的团队。
+      label: 4. Implementation Checklist
+      description: Tasks that must be completed during development.
       options:
-        - label: 🖥️ Backend (后端)
-        - label: 🎨 Frontend (前端)
-        - label: ⚙️ DevOps / Infra (运维/基础架构)
-        - label: 📝 Documentation (文档)
+        - label: Setup project structure and boilerplate
+        - label: Implement core business logic
+        - label: Create/Update database migrations
+        - label: Integrate third-party services (if applicable)
+        - label: Perform self-review of code logic
 
-  - type: dropdown
-    id: priority
+  - type: checkboxes
+    id: dod
     attributes:
-      label: 紧迫程度
+      label: 5. Definition of Done (DoD)
+      description: Final requirements for closing the issue.
       options:
-        - ☁️ 低 - 只是一个不错的想法 (Nice to have)
-        - ⛅ 中 - 对我的工作流有帮助
-        - ⛈️ 高 - 我非常需要这个功能 (Critical)
-    validations:
-      required: false
+        - label: Unit tests passed with >80% coverage
+        - label: Security hardening completed (Input validation/Rate limiting)
+        - label: API documentation updated (Swagger/Postman)
+        - label: Integration tested in Dev environment
+        - label: Code review approved by Tech Lead
+
+  - type: textarea
+    id: resources
+    attributes:
+      label: 6. Resources
+      description: Figma designs, documentation, or related issues.
+      placeholder: "Figma Link: https://..."
