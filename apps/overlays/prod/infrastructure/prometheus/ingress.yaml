@@ -6,6 +6,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
+  tls:
+    - hosts:
+        - prometheus.weijun.online
+      secretName: prometheus-tls-secret
   rules:
     - host: prometheus.weijun.online
       http:
