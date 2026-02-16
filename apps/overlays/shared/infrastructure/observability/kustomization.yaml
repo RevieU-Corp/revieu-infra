@@ -5,3 +5,4 @@ resources:
   - ../../../prod/infrastructure/fluent-bit
   - ../../../prod/infrastructure/loki
   - ../../../prod/infrastructure/grafana
+  - ../../../prod/infrastructure/prometheus

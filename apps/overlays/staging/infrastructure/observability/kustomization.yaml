@@ -5,5 +5,5 @@ resources:
   - ../fluent-bit/
   - ../loki/
   - ../grafana/
+  - ../prometheus/
   - ../traefik/
-
