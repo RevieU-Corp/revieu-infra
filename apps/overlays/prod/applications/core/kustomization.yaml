@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../base/applications/core/
-  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/refs/heads/main/apps/core/configs/sealed-secrets-dev.yaml
+  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/refs/heads/main/apps/core/configs/sealed-secrets.yaml
 
 images:
   - name: ghcr.io/revieu-corp/revieu-core
