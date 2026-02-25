@@ -8,7 +8,7 @@ namespace: revieu-dev
 
 images:
   - name: ghcr.io/revieu-corp/revieu-web
-    newTag: 897b6c8 # Dev 环境使用 dev tag
+    newTag: sha-897b6c8 # Dev 环境使用 dev tag
 
 patches:
   - target:
