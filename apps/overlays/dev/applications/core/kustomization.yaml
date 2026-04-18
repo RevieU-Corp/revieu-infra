@@ -9,7 +9,7 @@ namespace: revieu-dev
 
 images:
   - name: ghcr.io/revieu-corp/revieu-core
-    newTag: sha-df23dd1
+    newTag: sha-f8b0d1b
 
 patches:
   - target:
