@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - ../../../../base/applications/core
-  - https://raw.githubusercontent.com/RevieU-Corp/revieu-backend/refs/heads/main/apps/core/configs/sealed-secrets-dev.yaml
 
 namespace: revieu-dev
 

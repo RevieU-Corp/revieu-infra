@@ -7,7 +7,7 @@ spec:
   description: Business applications (web, core)
   sourceRepos:
     - https://github.com/RevieU-Corp/revieu-infra.git
-    - https://raw.githubusercontent.com/RevieU-Corp/*  # 允许拉取外部 sealed-secrets
+    - https://github.com/RevieU-Corp/revieu-backend.git
   destinations:
     - namespace: 'revieu-*'
       server: https://kubernetes.default.svc
