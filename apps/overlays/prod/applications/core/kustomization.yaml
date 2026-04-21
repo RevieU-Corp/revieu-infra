@@ -5,4 +5,4 @@ resources:
 
 images:
   - name: ghcr.io/revieu-corp/revieu-core
-    newTag: sha-ee15138 # Updated: WireGuard DB config + env vars
+    newTag: sha-dabf0d1 # Updated: WireGuard DB config + env vars
